@@ -32,7 +32,7 @@ def contrainte_1(V):
 
 	## lecture du fichier
 
-path = "\\Users\\Antoine\\Desktop\\mines\\Informatique\\Optimisation\\donnees-projet-gr1.txt"
+path = "donnees-projet-gr1.txt"
 
 file = open(path)
 content = file.readlines()
@@ -125,14 +125,15 @@ b = np.array([Liste_derive_batt_moyenne]).T
 x = np.linalg.lstsq(A,b)
 
 coeff_directeur, ordonnee_origine = x[0]
-Liste_approx_lstsq = coeff_directeur*Liste_intens_moyenne + ordonnee_origine
-R_carre = 1 - np.sum((Liste_derive_batt_moyenne-Liste_approx_lstsq)**2)
+print(x[0])
+# Liste_approx_lstsq = coeff_directeur*Liste_intens_moyenne + ordonnee_origine
+# R_carre = 1 - np.sum((Liste_derive_batt_moyenne-Liste_approx_lstsq)**2)
 
-plt.figure()
-plt.ylabel("dérivée de la charge")
-plt.xlabel("intensité")
-plt.title("Test du modèle de décharge/recharge de la batterie")
-plt.plot(Liste_intens_moyenne, Liste_approx_lstsq, label = "approximation, R^2 = " + str(R_carre))
-plt.plot(Liste_intens_moyenne, Liste_derive_batt_moyenne, marker = '.', linestyle = " ", label = "donnees")
-plt.legend(loc = 0)
-plt.show()
+# plt.figure()
+# plt.ylabel("dérivée de la charge")
+# plt.xlabel("intensité")
+# plt.title("Test du modèle de décharge/recharge de la batterie")
+# plt.plot(Liste_intens_moyenne, Liste_approx_lstsq, label = "approximation, R^2 = " + str(R_carre))
+# plt.plot(Liste_intens_moyenne, Liste_derive_batt_moyenne, marker = '.', linestyle = " ", label = "donnees")
+# plt.legend(loc = 0)
+# plt.show()
