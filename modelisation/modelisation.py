@@ -5,34 +5,11 @@ import os
 import matplotlib.pyplot as plt 
 import numpy as np
 
-## Constantes
-
-t_init = 0
-t_fin = 1 
-dt = 1e-3
-
-## Fonction principale et contraintes
-
-def cout(t):
-	return 1
-
-def f(V):
-
-	Sum = 0
-
-	for (i,v) in V.enumerate(): # Pour chaque pas de temps
-		Sum += sum(v)*c(i*dt)
-
-	return Sum/i
-
-def contrainte_1(V):
-	return sum(V.T) - 1
-
 ## Modélisation de la batterie
 
 	## lecture du fichier
 
-path = "donnees-projet-gr1.txt"
+path = "modelisation/donnees-projet-gr1.txt"
 
 file = open(path)
 content = file.readlines()
@@ -123,7 +100,6 @@ Liste_derive_batt_moyenne = np.array(Liste_derive_batt_moyenne)
 A = np.array([[intens, 1] for intens in Liste_intens_moyenne])
 b = np.array([Liste_derive_batt_moyenne]).T
 x = np.linalg.lstsq(A,b)
-
 coeff_directeur, ordonnee_origine = x[0]
 print(x[0])
 # Liste_approx_lstsq = coeff_directeur*Liste_intens_moyenne + ordonnee_origine
