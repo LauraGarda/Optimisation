@@ -69,32 +69,30 @@ def grad_contraintes(V):
 	return grad_C
 
 
-def Uzawa_fixe(f, grad_f, c, grad_c, x0, l, rho, lambda0 = 1.0, max_iter = 100000, epsilon_grad_L = 1e-11):
-    lam = 1*lambda0
-    xk = 1*x0
+def Uzawa_1_voiture(f, grad_f, c, grad_c, x0, l, rho, lambda0, max_iter = 100000, epsilon_grad_L = 1e-11):
+	lam = 1*lambda0
+	xk = 1*x0
 
-    def Grad_L(grad_f, lam, grad_c, xk):
-    	return (grad_f(xk) + np.dot(lam,grad_c(xk))).T
-    def update_lam(lam, rho, c, xk):
-    	C = c(xk)
-    	for i in range(len(lam)):
-            lam[i] = max(0, lam[i] + rho*C[i])
+	def Grad_L(grad_f, lam, grad_c, xk):
+		return (grad_f(xk) + np.dot(lam,grad_c(xk))).T
+	def update_lam(lam, rho, c, xk):
+		C = c(xk)
+		for i in range(len(lam)):
+			lam[i] = max(0, lam[i] + rho*C[i])
+	grad_l = Grad_L(grad_f, lam, grad_c, xk)
+	pk = -1*grad_l
+	xk += l*pk
+	update_lam(lam, rho, c, xk)
+	num_iter = 0
+	
+	while num_iter < max_iter and np.linalg.norm(grad_l) > epsilon_grad_L:
+		grad_l = Grad_L(grad_f, lam, grad_c, xk)
+		pk = -1*grad_l
+		xk += l*pk
+		update_lam(lam, rho, c, xk)
+		num_iter += 1
+	return xk
 
-    grad_l = Grad_L(grad_f, lam, grad_c, xk)
-    pk = -1*grad_l
-    xk += l*pk
-    update_lam(lam, rho, c, xk)
-    num_iter = 0
-    
-    while num_iter < max_iter and np.linalg.norm(grad_l) > epsilon_grad_L:
-        grad_l = Grad_L(grad_f, lam, grad_c, xk)
-        pk = -1*grad_l
-        xk += l*pk
-        update_lam(lam, rho, c, xk)
-        num_iter += 1
-    return xk
-
-X = Uzawa_fixe(f, grad_f, contraintes, grad_contraintes, x0, 1e-3, 1e-2, lambda0)
+X = Uzawa_1_voiture(f, grad_f, contraintes, grad_contraintes, x0, 1e-3, 1e-2, lambda0)
 print(X)
-print(np.sum(X))
-print(GLOBAL_K*GLOBAL_Delta_charge)
+
