@@ -12,9 +12,10 @@ U = 400
 lambda0 = np.array([ 1 for _ in range(11)], dtype = float)
 x0 = np.array([[ 0 for _ in range(10)]],dtype = float).T
 
+
 GLOBAL_dt = 1e-1
-GLOBAL_Delta_charge = 0.009
 GLOBAL_K = U/(a*P_max*GLOBAL_dt)
+GLOBAL_Delta_charge = 0.9/GLOBAL_K
 
 ## Fonction principale et contraintes
 
@@ -77,6 +78,9 @@ def Uzawa_1_voiture(f, grad_f, c, grad_c, x0, l, rho, lambda0, max_iter = 100000
 		return (grad_f(xk) + np.dot(lam,grad_c(xk))).T
 	def update_lam(lam, rho, c, xk):
 		C = c(xk)
+		print(xk)
+		print("C is ")
+		print(C)
 		for i in range(len(lam)):
 			lam[i] = max(0, lam[i] + rho*C[i])
 	grad_l = Grad_L(grad_f, lam, grad_c, xk)
@@ -89,10 +93,13 @@ def Uzawa_1_voiture(f, grad_f, c, grad_c, x0, l, rho, lambda0, max_iter = 100000
 		grad_l = Grad_L(grad_f, lam, grad_c, xk)
 		pk = -1*grad_l
 		xk += l*pk
+		print("lam is")
+		print(lam)
 		update_lam(lam, rho, c, xk)
 		num_iter += 1
+	print(num_iter)
 	return xk
 
-X = Uzawa_1_voiture(f, grad_f, contraintes, grad_contraintes, x0, 1e-3, 1e-2, lambda0)
-print(X)
+X = Uzawa_1_voiture(f, grad_f, contraintes, grad_contraintes, x0, 1e-1, 1e-1, lambda0)
+# print(X)
 
