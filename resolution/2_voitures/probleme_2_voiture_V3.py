@@ -173,7 +173,7 @@ def decomposition_coordination(grad_f, c_solo, grad_c, num_max, lambda0, Var, l,
         print( num_iter)
     return Listes_puissances
 
-X = decomposition_coordination(grad_f, contraintes_solo, grad_contraintes_solo, 2, lambda0, Var, 1e-2, 1e-2, 1e-2)
+X = decomposition_coordination(grad_f, contraintes_solo, grad_contraintes_solo, 2, lambda0, Var, 0.5, 0.5, 0.5)
 plt.figure()
 plt.title("évolution de la puissance allouée aux deux voitures sur un temps précis")
 plt.xlabel("iteration")
