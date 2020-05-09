@@ -1,6 +1,7 @@
 import matplotlib.pyplot as plt 
 import numpy as np
 import time
+import scipy.optimize as scp
 ## Constantes
 
 t_init = 0
@@ -12,9 +13,12 @@ U = 400
 lambda0 = np.array([ 1 for _ in range(11)], dtype = float)
 x0 = np.array([[ 0 for _ in range(10)]],dtype = float).T
 
+
 GLOBAL_dt = 1e-1
-GLOBAL_Delta_charge = 0.009
 GLOBAL_K = U/(a*P_max*GLOBAL_dt)
+GLOBAL_Delta_charge = 0.0092
+
+print(GLOBAL_K*GLOBAL_Delta_charge)
 
 ## Fonction principale et contraintes
 
@@ -32,7 +36,7 @@ def f(V):
 	Sum = 0
 
 	for (i,v) in enumerate(V): # Pour chaque pas de temps
-		Sum += sum(v)*cout(i*GLOBAL_dt)
+		Sum += v*cout(i*GLOBAL_dt)
 
 	return Sum/i
 
@@ -91,8 +95,29 @@ def Uzawa_1_voiture(f, grad_f, c, grad_c, x0, l, rho, lambda0, max_iter = 100000
 		xk += l*pk
 		update_lam(lam, rho, c, xk)
 		num_iter += 1
-	return xk
+	return num_iter
 
-X = Uzawa_1_voiture(f, grad_f, contraintes, grad_contraintes, x0, 1e-3, 1e-2, lambda0)
-print(X)
+cons = ({'type': 'eq', 'fun': lambda V: - GLOBAL_K*GLOBAL_Delta_charge + sum(V)})
+bnds = ((0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1))
+Liste_moi = []
+Liste_mu = []
+mu = 0
+plt.figure()
+for i in range(-20,15):
+	mu = 1*10**(-i/10)
+	Liste_mu.append(mu)
+	Liste_actuelle = []
+	for k in range(100):
+		GLOBAL_Delta_charge = 0.0092 * (k + 1) / 100 
+		print(GLOBAL_Delta_charge * GLOBAL_K)
+		n = Uzawa_1_voiture(f, grad_f, contraintes, grad_contraintes, x0, mu, mu, lambda0)
+		Liste_actuelle.append(n)
+	Liste_moi.append( sum(Liste_actuelle) / 100)
 
+plt.xlabel("steps")
+plt.ylabel("average number of iterations")
+plt.xscale('log')
+plt.title("influence of the steps over the average number of iterations")
+plt.plot(Liste_mu, Liste_moi)
+plt.legend(loc = 0)
+plt.show()

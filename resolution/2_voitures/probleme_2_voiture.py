@@ -59,8 +59,8 @@ def contrainte(num, V):
 
 def grad_contraintes(num, V):
 	global GLOBAL_num_voitures
-	grad_C = [[0 for _ in range(2*n)]
 	n = len(V.T)
+	grad_C = [[0 for _ in range(2*n)]]
 	
 		
 	grad_C.append([-1 for _ in range(n)])
@@ -74,7 +74,6 @@ def optim_gradient_fixed_step(grad_fun, num, lam, x0, l, max_iter = 100000, epsi
         number_iter += 1
         xk -= l*grad_fun(num, lam, xk)
         # print(grad_fun(num, lam, xk))
-    print("ok")
     return xk
 
 def decomposition(grad_f, grad_c, num_max, lam, x0, l):
